@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "da-notes-f456a": {
+      "hosting": {
+        "da-keep": [
+          "da-notes-f456a"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "da-notes-f456a"
+  }
+}
