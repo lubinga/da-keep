@@ -16,10 +16,10 @@ export class NoteListComponent {
   }
 
   getList(): Note[] {
-    if (this.status == 'notes') {
+    if (this.status == 'notes') {      
       if (this.favFilter == 'all') {
         return this.noteService.normalNotes;
-      } else {
+      } else {        
         return this.noteService.normalMarkedNotes;
       }
     } else {

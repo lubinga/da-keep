@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface'
-import { Firestore, collection, doc, collectionData, 
-  onSnapshot, addDoc, updateDoc, deleteDoc, query, limit, orderBy, where } from '@angular/fire/firestore';
+import {
+  Firestore, collection, doc, collectionData,
+  onSnapshot, addDoc, updateDoc, deleteDoc, query, limit, orderBy, where
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -31,8 +33,8 @@ export class NoteListService {
     );
   }
 
-  async updateNote(note: Note) {    
-    if (note.id) {      
+  async updateNote(note: Note) {
+    if (note.id) {
       let docRef = this.getColIdFromNote(note);
       await updateDoc(this.getSingleDoc(docRef, note.id), this.getCleanJson(note)).catch(
         (err) => {
@@ -83,11 +85,22 @@ export class NoteListService {
       list.forEach(element => {
         this.normalNotes.push(this.setNoteObject(element.data(), element.id));
       });
-    });    
+      list.docChanges().forEach((change) => {
+        if(change.type === "added"){
+          console.log("New note: ", change.doc.data());          
+        }
+        if(change.type === "modified"){
+          console.log("Modified note: ", change.doc.data());          
+        }
+        if(change.type === "removed"){
+          console.log("Removed note: ", change.doc.data());          
+        }
+      });
+    });
   }
 
   subMarkedNotesList() {
-    const q = query(this.getNotesRef(), where("marked", "==", "true"), orderBy("title"), limit(100));
+    const q = query(this.getNotesRef(), where("marked", "==", true), orderBy("title"), limit(100));
     return onSnapshot(q, (list) => {
       this.normalMarkedNotes = [];
       list.forEach(element => {
@@ -128,7 +141,7 @@ export class NoteListService {
       type: obj.type || "note",
       title: obj.title || "",
       content: obj.content || "",
-      marked: obj.merked || false
+      marked: obj.marked || false
     }
   }
 }
